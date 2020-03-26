@@ -1,6 +1,5 @@
 package com.wheelpicker;
 
-
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -29,9 +28,9 @@ public class LoopView extends View {
     private int selectedItem;
     private GestureDetector.SimpleOnGestureListener simpleOnGestureListener;
     Context context;
-    Paint paintA;  //paint that draw top and bottom text
-    Paint paintB;  // paint that draw center text
-    Paint paintC;  // paint that draw line besides center text
+    Paint paintA; // paint that draw top and bottom text
+    Paint paintB; // paint that draw center text
+    Paint paintC; // paint that draw line besides center text
     ArrayList arrayList;
     int textSize;
     int maxTextWidth;
@@ -152,7 +151,6 @@ public class LoopView extends View {
 
     }
 
-
     private void smoothScroll() {
         int offset = (int) (totalScrollY % (lineSpacingMultiplier * maxTextHeight));
         cancelFuture();
@@ -160,7 +158,7 @@ public class LoopView extends View {
     }
 
     public void cancelFuture() {
-        if (mFuture!=null&&!mFuture.isCancelled()) {
+        if (mFuture != null && !mFuture.isCancelled()) {
             mFuture.cancel(true);
             mFuture = null;
         }
@@ -173,9 +171,9 @@ public class LoopView extends View {
     protected final void smoothScroll(float velocityY) {
         cancelFuture();
         int velocityFling = 20;
-        mFuture = mExecutor.scheduleWithFixedDelay(new LoopTimerTask(this, velocityY), 0, velocityFling, TimeUnit.MILLISECONDS);
+        mFuture = mExecutor.scheduleWithFixedDelay(new LoopTimerTask(this, velocityY), 0, velocityFling,
+                TimeUnit.MILLISECONDS);
     }
-
 
     protected final void itemSelected() {
         if (loopListener != null) {
@@ -250,9 +248,9 @@ public class LoopView extends View {
                 canvas.scale(1.0F, (float) Math.sin(radian));
                 if (translateY <= firstLineY && maxTextHeight + translateY >= firstLineY) {
                     canvas.save();
-                    //top = 0,left = (measuredWidth - maxTextWidth)/2
+                    // top = 0,left = (measuredWidth - maxTextWidth)/2
                     canvas.clipRect(0, 0, measuredWidth, firstLineY - translateY);
-                    drawCenter(canvas, paintA, as[j1],maxTextHeight);
+                    drawCenter(canvas, paintA, as[j1], maxTextHeight);
                     canvas.restore();
                     canvas.save();
                     canvas.clipRect(0, firstLineY - translateY, measuredWidth, (int) (itemHeight));
@@ -265,15 +263,15 @@ public class LoopView extends View {
                     canvas.restore();
                     canvas.save();
                     canvas.clipRect(0, secondLineY - translateY, measuredWidth, (int) (itemHeight));
-                    drawCenter(canvas, paintA, as[j1],maxTextHeight);
+                    drawCenter(canvas, paintA, as[j1], maxTextHeight);
                     canvas.restore();
                 } else if (translateY >= firstLineY && maxTextHeight + translateY <= secondLineY) {
                     canvas.clipRect(0, 0, measuredWidth, (int) (itemHeight));
-                    drawCenter(canvas, paintB, as[j1],maxTextHeight);
+                    drawCenter(canvas, paintB, as[j1], maxTextHeight);
                     selectedItem = arrayList.indexOf(as[j1]);
                 } else {
                     canvas.clipRect(0, 0, measuredWidth, (int) (itemHeight));
-                    drawCenter(canvas, paintA, as[j1],maxTextHeight);
+                    drawCenter(canvas, paintA, as[j1], maxTextHeight);
                 }
                 canvas.restore();
             }
@@ -305,9 +303,6 @@ public class LoopView extends View {
         switch (motionevent.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 y1 = motionevent.getRawY();
-                if (getParent() != null) {
-                  getParent().requestDisallowInterceptTouchEvent(true);
-                }
                 break;
             case MotionEvent.ACTION_MOVE:
                 y2 = motionevent.getRawY();
@@ -323,19 +318,16 @@ public class LoopView extends View {
                 }
                 break;
             case MotionEvent.ACTION_UP:
-            case MotionEvent.ACTION_CANCEL:
             default:
                 if (!gestureDetector.onTouchEvent(motionevent) && motionevent.getAction() == MotionEvent.ACTION_UP) {
                     smoothScroll();
-                }
-                if (getParent() != null) {
-                  getParent().requestDisallowInterceptTouchEvent(false);
                 }
                 return true;
         }
 
         if (!isLoop) {
-            int circleLength = (int) ((float) (arrayList.size() - 1 - initPosition) * (lineSpacingMultiplier * maxTextHeight));
+            int circleLength = (int) ((float) (arrayList.size() - 1 - initPosition)
+                    * (lineSpacingMultiplier * maxTextHeight));
             if (totalScrollY >= circleLength) {
                 totalScrollY = circleLength;
             }

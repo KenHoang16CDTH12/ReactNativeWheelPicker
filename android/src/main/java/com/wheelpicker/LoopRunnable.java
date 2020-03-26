@@ -1,4 +1,5 @@
 package com.wheelpicker;
+
 final class LoopRunnable implements Runnable {
 
     final LoopView loopView;
